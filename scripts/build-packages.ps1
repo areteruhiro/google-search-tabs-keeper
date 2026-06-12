@@ -25,6 +25,56 @@ $icons = @(
     "icon128.png"
 )
 
+function New-PortableZip {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SourceDirectory,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DestinationPath
+    )
+
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+    if (Test-Path -LiteralPath $DestinationPath) {
+        Remove-Item -LiteralPath $DestinationPath -Force
+    }
+
+    $sourceRoot = [System.IO.Path]::GetFullPath($SourceDirectory)
+    $fileStream = [System.IO.File]::Open(
+        $DestinationPath,
+        [System.IO.FileMode]::CreateNew
+    )
+
+    try {
+        $archive = [System.IO.Compression.ZipArchive]::new(
+            $fileStream,
+            [System.IO.Compression.ZipArchiveMode]::Create,
+            $false
+        )
+
+        try {
+            foreach ($file in Get-ChildItem -LiteralPath $sourceRoot -File -Recurse) {
+                $relativePath = $file.FullName.Substring($sourceRoot.Length).TrimStart("\", "/")
+                $entryName = $relativePath.Replace("\", "/")
+                [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+                    $archive,
+                    $file.FullName,
+                    $entryName,
+                    [System.IO.Compression.CompressionLevel]::Optimal
+                ) | Out-Null
+            }
+        }
+        finally {
+            $archive.Dispose()
+        }
+    }
+    finally {
+        $fileStream.Dispose()
+    }
+}
+
 $resolvedStage = [System.IO.Path]::GetFullPath($stage)
 $resolvedTemp = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())
 if (-not $resolvedStage.StartsWith($resolvedTemp, [System.StringComparison]::OrdinalIgnoreCase)) {
@@ -49,17 +99,11 @@ foreach ($icon in $icons) {
 
 foreach ($browser in @("chrome", "firefox")) {
     $archive = Join-Path $dist "google-search-tabs-keeper-$browser-v$version.zip"
-    if (Test-Path -LiteralPath $archive) {
-        Remove-Item -LiteralPath $archive -Force
-    }
-    Compress-Archive -Path (Join-Path $stage "*") -DestinationPath $archive -CompressionLevel Optimal
+    New-PortableZip -SourceDirectory $stage -DestinationPath $archive
 }
 
 $amoArchive = Join-Path $amoDist "google-search-tabs-keeper-firefox-v$version-amo.zip"
-if (Test-Path -LiteralPath $amoArchive) {
-    Remove-Item -LiteralPath $amoArchive -Force
-}
-Compress-Archive -Path (Join-Path $stage "*") -DestinationPath $amoArchive -CompressionLevel Optimal
+New-PortableZip -SourceDirectory $stage -DestinationPath $amoArchive
 
 if (Test-Path -LiteralPath $sourceStage) {
     Remove-Item -LiteralPath $sourceStage -Recurse -Force
@@ -76,10 +120,7 @@ foreach ($icon in $icons) {
 Copy-Item -LiteralPath (Join-Path $root "scripts\build-packages.ps1") -Destination (Join-Path $sourceStage "scripts")
 
 $sourceArchive = Join-Path $amoDist "google-search-tabs-keeper-v$version-source.zip"
-if (Test-Path -LiteralPath $sourceArchive) {
-    Remove-Item -LiteralPath $sourceArchive -Force
-}
-Compress-Archive -Path (Join-Path $sourceStage "*") -DestinationPath $sourceArchive -CompressionLevel Optimal
+New-PortableZip -SourceDirectory $sourceStage -DestinationPath $sourceArchive
 
 Remove-Item -LiteralPath $stage -Recurse -Force
 Remove-Item -LiteralPath $sourceStage -Recurse -Force
