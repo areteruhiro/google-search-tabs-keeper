@@ -3,6 +3,20 @@
 Google検索で「ショッピング」へ移動した際などに、検索カテゴリのタブ列が
 消えた場合だけ補助ナビゲーションを表示するChrome・Firefox拡張機能です。
 
+## Before / After
+
+### Before
+
+Googleショッピングでは、通常の検索カテゴリナビゲーションが表示されません。
+
+![拡張機能を使用する前のGoogleショッピング](docs/images/before.png)
+
+### After
+
+拡張機能が検索カテゴリナビゲーションを復元します。
+
+![拡張機能を使用した後のGoogleショッピング](docs/images/after.png)
+
 ## 対応環境
 
 - Google Chrome
