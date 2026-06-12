@@ -11,6 +11,12 @@ Google検索で「ショッピング」へ移動した際などに、検索カ�
 - WebExtensions Manifest V3
 - `www.google.com` / `www.google.co.jp`
 
+## Firefox Add-ons
+
+Mozilla Firefox Add-onsで公開予定です。
+
+https://addons.mozilla.org/ja/firefox/addon/google-search-tabs-keeper/
+
 ## Chromeへのインストール
 
 1. Chromeで `chrome://extensions/` を開く
