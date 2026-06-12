@@ -3,6 +3,12 @@
 Google検索で「ショッピング」へ移動した際などに、検索カテゴリのタブ列が
 消えた場合だけ補助ナビゲーションを表示するChrome拡張機能です。
 
+## 対応環境
+
+- Google Chrome
+- Chrome Extensions Manifest V3
+- `www.google.com` / `www.google.co.jp`
+
 ## インストール
 
 1. Chromeで `chrome://extensions/` を開く
@@ -19,8 +25,6 @@ Google検索で「ショッピング」へ移動した際などに、検索カ�
   ショート動画、ウェブ、フライトへ移動できます。
 - 「もっと見る」には動画、ニュース、地図、書籍を用意しています。
 - 「ツール」では検索期間を指定できます。
-
-対応URLは `www.google.com` と `www.google.co.jp` の検索ページです。
 
 ## ライセンス
 
