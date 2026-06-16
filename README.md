@@ -27,7 +27,7 @@ Googleショッピングでは、通常の検索カテゴリナビゲーショ�
 
 ## Firefox Add-ons
 
-Mozilla Firefox Add-onsで公開予定です。
+Mozilla Firefox Add-onsで公開されています
 
 https://addons.mozilla.org/ja/firefox/addon/google-search-tabs-keeper/
 
